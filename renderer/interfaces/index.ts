@@ -21,6 +21,11 @@ export interface Tweet {
 }
 
 export interface SearchResult {
+  data: Tweet[];
+  error?: any;
+}
+
+export interface TwitterSearchResult {
   data?: Tweet[];
   meta: {
     newest_id: string;

@@ -7,6 +7,7 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 import ElectronStore from "electron-store";
+import { twitterHomeTimeline, twitterSearch } from "./repositories/twitter";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -39,21 +40,25 @@ app.on("window-all-closed", app.quit);
 
 const electronStore = new ElectronStore();
 
-ipcMain.on(
-  "useElectronStore",
-  async (event, payload: { key: string; data?: any } | undefined) => {
-    if (payload) {
-      if (payload.key) {
-        if (payload.data) {
-          electronStore.set(payload.key, payload.data);
-        }
-        event.returnValue = electronStore.get(payload.key);
-      }
+// listen channels and resend the received payload to the renderer process
+ipcMain.on("useElectronStore", async (event, payload: { key: string; data?: any } | undefined) => {
+  if (payload && payload.key) {
+    if (payload.data) {
+      electronStore.set(payload.key, payload.data);
     }
+    event.returnValue = electronStore.get(payload.key);
   }
-);
+});
 
 ipcMain.on("clearElectronStore", async (event) => {
   electronStore.clear();
   event.returnValue = true;
+});
+
+ipcMain.on("twitterSearch", async (event, query: string) => {
+  event.returnValue = await twitterSearch(query);
+});
+
+ipcMain.on("twitterHomeTimeline", async (event) => {
+  event.returnValue = await twitterHomeTimeline();
 });

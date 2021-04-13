@@ -8,8 +8,9 @@ type ListDetailProps = {
 
 const ListDetail = ({ item: tweet }: ListDetailProps) => (
   <div>
-    <h1>Detail for {tweet.text}</h1>
+    <h3>Detail for {tweet.text}</h3>
     <p>ID: {tweet.id}</p>
+    <hr />
   </div>
 );
 

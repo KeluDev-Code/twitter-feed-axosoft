@@ -1,5 +1,6 @@
 import React from "react";
 import { Tweet } from "../interfaces";
+import ListDetail from "./ListDetail";
 
 type Props = {
   items: Tweet[];
@@ -8,9 +9,7 @@ type Props = {
 const List = ({ items }: Props) => (
   <ul>
     {items.map((item) => (
-      <li key={item.id}>
-        {item.id}: {item.text}
-      </li>
+      <ListDetail key={item.id} item={item}></ListDetail>
     ))}
   </ul>
 );
